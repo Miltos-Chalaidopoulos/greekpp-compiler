@@ -1,0 +1,98 @@
+greek++ grammar
+
+program ::= 'πρόγραμμα' ID programblock ;
+
+programblock ::= declarations subprograms 'αρχή_προγράμματος' sequence 'τέλος_προγράμματος' ; 
+
+declarations ::= ( 'δήλωση' varlist )* 
+               |ε ;
+
+varlist ::= ID (','ID )* ;
+
+subprograms ::= (func | proc)* ;
+
+func ::= 'συνάρτηση' ID '(' formalparlist ')' funcblock ;
+
+proc ::= 'διαδικασία' ID '(' formalparlist')' procblock ;
+
+formalparlist ::= varilist
+                | ε ;
+
+funcblock : 'διαπροσωπεία' funcinput funcoutput declarations 'αρχή_συνάρτησης' sequence 'τέλος_συνάρτησης' ;
+
+procblock ::= 'διαπροσωπεία' funcinput funcoutput declarations 'αρχή_διαδικασίας' sequence 'τέλος_διαδικασίας' ; 
+
+funcinput ::= 'είσοδος' varlist
+            | ε ;
+
+funcoutput ::= 'έξοδος' varlist
+            | ε ;
+
+sequence ::=  statement ( ';' statement )* ;
+
+statement ::= assignment_stat
+           |  if_stat
+           |  while_stat
+           |  do_stat
+           |  for_stat
+           |  input_stat
+           |  print_stat
+           |  call_stat ;
+
+assignment_stat ::= ID ':=' expression ;
+
+if_stat ::= 'εάν' condition 'τότε' sequence elsepart 'εάν_τέλος';
+
+elsepart ::= 'αλλιώς' sequence
+          | ε ;
+
+while_stat ::= 'όσο' condition 'επανάλαβε' sequence 'όσο_τέλος' ;
+
+do_stat ::= 'επανάλαβε' sequence 'μέχρι' condition ;
+
+for_stat ::= 'για' ID ':=' expression 'έως' expression step 'επανάλαβε' sequence 'για_τέλος' ;
+
+step ::= 'με_βήμα' expression
+      |ε;
+
+print_stat ::= 'γράψε' expression ;
+
+input_stat ::= 'διάβασε' ID ;
+
+call_stat ::= 'εκτέλεσε' ID idtail ;
+
+idtail ::= actualpars
+         | ε ;
+
+actualpars ::= '(' actualparlist ')' ;
+
+actualparlist ::= actualparitem ( ',' actualparitem )*
+                | ε ; 
+
+actualparitem ::= expression | '%' ID ;
+
+condition ::= boolterm ( 'ή' boolterm )* ;
+
+boolterm ::= boolfactor ( 'και' boolfactor )* ;
+
+boolfactor ::= 'όχι' '[' condition ']'
+             | '[' condition ']'
+             | expression relational_oper expression ;
+
+expression ::= optional_sign term ( add_oper term )* ;
+
+term ::= factor ( mul_oper factor )* ;
+
+factor ::= INTEGER
+         | '(' expression ')'
+         | ID idtail ; 
+
+relational_oper ::= '=' | '<=' | '>=' | '<>' | '<' | '>' ; 
+
+add_oper ::= '+' | '-' ;
+
+mul_oper ::= '*' | '/' ;
+
+optional_sign ::= add_oper
+                | ε ;
+
